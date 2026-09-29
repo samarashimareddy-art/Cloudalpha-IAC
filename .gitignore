@@ -5,3 +5,6 @@ node_modules/
 .terraform.lock.hcl
 *.tfplan
 .env
+
+.terragrunt-cache/
+terragrunt.hcl

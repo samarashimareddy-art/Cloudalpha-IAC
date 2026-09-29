@@ -1,0 +1,7 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_network_acl.public" [ label = "aws_network_acl.public
+(aws_network_acl)", shape =rectangle, fillcolor = "#E78F81" ];
+  "aws_network_acl.private" [ label = "aws_network_acl.private
+(aws_network_acl)", shape =rectangle, fillcolor = "#E78F81" ];
+}

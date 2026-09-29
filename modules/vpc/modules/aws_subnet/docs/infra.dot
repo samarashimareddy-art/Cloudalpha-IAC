@@ -1,0 +1,7 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_subnet.public" [ label = "aws_subnet.public
+(aws_subnet)" ];
+  "aws_subnet.private" [ label = "aws_subnet.private
+(aws_subnet)" ];
+}

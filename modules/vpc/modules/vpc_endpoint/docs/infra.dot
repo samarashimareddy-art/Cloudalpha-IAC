@@ -1,0 +1,7 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_vpc_endpoint" [ label = "aws_vpc_endpoint
+(AWS::EC2::VPCEndpoint)", shape =rectangle, fillcolor = "#E78F81" ];
+  "aws_vpc_endpoint_service" [ label = "aws_vpc_endpoint_service
+(AWS::EC2::VPCEndpointService)", shape =rectangle, fillcolor = "#E78F81" ];
+}

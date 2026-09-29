@@ -1,0 +1,10 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_eip.public_nat_eip" [ label = "aws_eip.public_nat_eip
+(aws_eip)", shape =rectangle ];
+  "aws_nat_gateway.public_nat_gateway" [ label = "aws_nat_gateway.public_nat_gateway
+(aws_nat_gateway)", shape =rectangle, fillcolor = "#E78F81" ];
+  "aws_nat_gateway.private_nat_gateway" [ label = "aws_nat_gateway.private_nat_gateway
+(aws_nat_gateway)", shape =rectangle, fillcolor = "#E78F81" ];
+  "aws_nat_gateway.public_nat_gateway" -> "aws_eip.public_nat_eip";
+}

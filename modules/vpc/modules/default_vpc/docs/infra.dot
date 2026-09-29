@@ -1,0 +1,5 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_default_vpc" [ label = "aws_default_vpc
+(aws_default_vpc)", shape =rectangle, fillcolor = "#E78F81" ];
+}
