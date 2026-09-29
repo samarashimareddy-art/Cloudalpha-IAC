@@ -52,7 +52,7 @@ resource "aws_instance" "this" {
 
 
   dynamic "cpu_options" {
-    for_each = length(var.cpu_options) > 0 ? [var.cpu_options] : []
+    for_each = (var.cpu_options == null ? 0 : length([for k, v in var.cpu_options : v if v != null])) > 0 ? [var.cpu_options] : []
     content {
       core_count       = try(cpu_options.value.core_count, null)
       threads_per_core = try(cpu_options.value.threads_per_core, null)
@@ -61,11 +61,11 @@ resource "aws_instance" "this" {
   }
 
   dynamic "capacity_reservation_specification" {
-    for_each = length(var.capacity_reservation_specification) > 0 ? [var.capacity_reservation_specification] : []
+    for_each = (var.capacity_reservation_specification == null ? 0 : length([for k, v in var.capacity_reservation_specification : v if v != null])) > 0 ? [var.capacity_reservation_specification] : []
     content {
       capacity_reservation_preference = try(capacity_reservation_specification.value.capacity_reservation_preference, null)
       dynamic "capacity_reservation_target" {
-        for_each = try([capacity_reservation_specification.value.capacity_reservation_target], [])
+        for_each = try(capacity_reservation_specification.value.capacity_reservation_target, null) != null ? [capacity_reservation_specification.value.capacity_reservation_target] : []
         content {
           capacity_reservation_id                 = try(capacity_reservation_target.value.capacity_reservation_id, null)
           capacity_reservation_resource_group_arn = try(capacity_reservation_target.value.capacity_reservation_resource_group_arn, null)
@@ -132,7 +132,7 @@ resource "aws_instance" "this" {
   }
 
   dynamic "private_dns_name_options" {
-    for_each = length(var.private_dns_name_options) > 0 ? [var.private_dns_name_options] : []
+    for_each = (var.private_dns_name_options == null ? 0 : length([for k, v in var.private_dns_name_options : v if v != null])) > 0 ? [var.private_dns_name_options] : []
 
     content {
       hostname_type                        = try(private_dns_name_options.value.hostname_type, null)
@@ -151,7 +151,7 @@ resource "aws_instance" "this" {
   }
 
   dynamic "maintenance_options" {
-    for_each = length(var.maintenance_options) > 0 ? [var.maintenance_options] : []
+    for_each = (var.maintenance_options == null ? 0 : length([for k, v in var.maintenance_options : v if v != null])) > 0 ? [var.maintenance_options] : []
 
     content {
       auto_recovery = try(maintenance_options.value.auto_recovery, null)
@@ -217,7 +217,7 @@ resource "aws_instance" "ignore_ami" {
   ebs_optimized = var.ebs_optimized
 
   dynamic "cpu_options" {
-    for_each = length(var.cpu_options) > 0 ? [var.cpu_options] : []
+    for_each = (var.cpu_options == null ? 0 : length([for k, v in var.cpu_options : v if v != null])) > 0 ? [var.cpu_options] : []
 
     content {
       core_count       = try(cpu_options.value.core_count, null)
@@ -227,7 +227,7 @@ resource "aws_instance" "ignore_ami" {
   }
 
   dynamic "capacity_reservation_specification" {
-    for_each = length(var.capacity_reservation_specification) > 0 ? [var.capacity_reservation_specification] : []
+    for_each = (var.capacity_reservation_specification == null ? 0 : length([for k, v in var.capacity_reservation_specification : v if v != null])) > 0 ? [var.capacity_reservation_specification] : []
 
     content {
       capacity_reservation_preference = try(capacity_reservation_specification.value.capacity_reservation_preference, null)
@@ -287,7 +287,7 @@ resource "aws_instance" "ignore_ami" {
   }
 
   dynamic "metadata_options" {
-    for_each = length(var.metadata_options) > 0 ? [var.metadata_options] : []
+    for_each = (var.metadata_options == null ? 0 : length([for k, v in var.metadata_options : v if v != null])) > 0 ? [var.metadata_options] : []
 
     content {
       http_endpoint               = try(metadata_options.value.http_endpoint, "enabled")
@@ -308,7 +308,7 @@ resource "aws_instance" "ignore_ami" {
   }
 
   dynamic "private_dns_name_options" {
-    for_each = length(var.private_dns_name_options) > 0 ? [var.private_dns_name_options] : []
+    for_each = (var.private_dns_name_options == null ? 0 : length([for k, v in var.private_dns_name_options : v if v != null])) > 0 ? [var.private_dns_name_options] : []
 
     content {
       hostname_type                        = try(private_dns_name_options.value.hostname_type, null)
@@ -318,7 +318,7 @@ resource "aws_instance" "ignore_ami" {
   }
 
   dynamic "launch_template" {
-    for_each = length(var.launch_template) > 0 ? [var.launch_template] : []
+    for_each = (var.launch_template == null ? 0 : length([for k, v in var.launch_template : v if v != null])) > 0 ? [var.launch_template] : []
 
     content {
       id      = lookup(var.launch_template, "id", null)
@@ -328,7 +328,7 @@ resource "aws_instance" "ignore_ami" {
   }
 
   dynamic "maintenance_options" {
-    for_each = length(var.maintenance_options) > 0 ? [var.maintenance_options] : []
+    for_each = (var.maintenance_options == null ? 0 : length([for k, v in var.maintenance_options : v if v != null])) > 0 ? [var.maintenance_options] : []
 
     content {
       auto_recovery = try(maintenance_options.value.auto_recovery, null)
@@ -404,7 +404,7 @@ resource "aws_spot_instance_request" "this" {
   # End spot request specific attributes
 
   dynamic "cpu_options" {
-    for_each = length(var.cpu_options) > 0 ? [var.cpu_options] : []
+    for_each = (var.cpu_options == null ? 0 : length([for k, v in var.cpu_options : v if v != null])) > 0 ? [var.cpu_options] : []
     content {
       core_count       = try(cpu_options.value.core_count, null)
       threads_per_core = try(cpu_options.value.threads_per_core, null)
@@ -413,7 +413,7 @@ resource "aws_spot_instance_request" "this" {
   }
 
   dynamic "capacity_reservation_specification" {
-    for_each = length(var.capacity_reservation_specification) > 0 ? [var.capacity_reservation_specification] : []
+    for_each = (var.capacity_reservation_specification == null ? 0 : length([for k, v in var.capacity_reservation_specification : v if v != null])) > 0 ? [var.capacity_reservation_specification] : []
     content {
       capacity_reservation_preference = try(capacity_reservation_specification.value.capacity_reservation_preference, null)
       dynamic "capacity_reservation_target" {
