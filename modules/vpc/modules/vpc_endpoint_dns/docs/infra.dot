@@ -1,0 +1,7 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_vpc_endpoint_private_dns" [ label = "aws_vpc_endpoint_private_dns
+(aws_vpc_endpoint_private_dns)" ];
+  "aws_vpc_endpoint_service_private_dns_verification" [ label = "aws_vpc_endpoint_service_private_dns_verification
+(aws_vpc_endpoint_service_private_dns_verification)" ];
+}

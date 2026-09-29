@@ -1,0 +1,71 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_vpc" [ label = "aws_vpc
+(AWS::EC2::VPC)" ];
+  "aws_vpc_block_public_access_exclusion" [ label = "aws_vpc_block_public_access_exclusion
+(AWS::EC2::VPCBlockPublicAccessExclusion)" ];
+  "aws_vpc_block_public_access_options" [ label = "aws_vpc_block_public_access_options
+(AWS::EC2::VPCBlockPublicAccessOptions)" ];
+  "aws_vpc_dhcp_options" [ label = "aws_vpc_dhcp_options
+(AWS::EC2::DHCPOptions)" ];
+  "aws_vpc_dhcp_options_association" [ label = "aws_vpc_dhcp_options_association
+(AWS::EC2::VPCDHCPOptionsAssociation)" ];
+  "aws_vpc_endpoint" [ label = "aws_vpc_endpoint
+(AWS::EC2::VPCEndpoint)" ];
+  "aws_vpc_endpoint_connection_accepter" [ label = "aws_vpc_endpoint_connection_accepter
+(AWS::EC2::VPCEndpointConnectionAccepter)" ];
+  "aws_vpc_endpoint_connection_notification" [ label = "aws_vpc_endpoint_connection_notification
+(AWS::EC2::VPCEndpointConnectionNotification)" ];
+  "aws_vpc_endpoint_policy" [ label = "aws_vpc_endpoint_policy
+(AWS::EC2::VPCEndpointPolicy)" ];
+  "aws_vpc_endpoint_private_dns" [ label = "aws_vpc_endpoint_private_dns
+(AWS::EC2::VPCEndpointPrivateDNS)" ];
+  "aws_vpc_endpoint_route_table_association" [ label = "aws_vpc_endpoint_route_table_association
+(AWS::EC2::VPCEndpointRouteTableAssociation)" ];
+  "aws_vpc_endpoint_security_group_association" [ label = "aws_vpc_endpoint_security_group_association
+(AWS::EC2::VPCEndpointSecurityGroupAssociation)" ];
+  "aws_vpc_endpoint_service" [ label = "aws_vpc_endpoint_service
+(AWS::EC2::VPCEndpointService)" ];
+  "aws_vpc_endpoint_service_allowed_principal" [ label = "aws_vpc_endpoint_service_allowed_principal
+(AWS::EC2::VPCEndpointServiceAllowedPrincipal)" ];
+  "aws_vpc_endpoint_service_private_dns_verification" [ label = "aws_vpc_endpoint_service_private_dns_verification
+(AWS::EC2::VPCEndpointServicePrivateDNSVerification)" ];
+  "aws_vpc_endpoint_subnet_association" [ label = "aws_vpc_endpoint_subnet_association
+(AWS::EC2::VPCEndpointSubnetAssociation)" ];
+  "aws_vpc_ipv4_cidr_block_association" [ label = "aws_vpc_ipv4_cidr_block_association
+(AWS::EC2::VPCCidrBlock)" ];
+  "aws_vpc_ipv6_cidr_block_association" [ label = "aws_vpc_ipv6_cidr_block_association
+(AWS::EC2::VPCCidrBlock)" ];
+  "aws_vpc_network_performance_metric_subscription" [ label = "aws_vpc_network_performance_metric_subscription
+(AWS::EC2::VPCNetworkPerformanceMetricSubscription)" ];
+  "aws_vpc_peering_connection" [ label = "aws_vpc_peering_connection
+(AWS::EC2::VPCPeeringConnection)" ];
+  "aws_vpc_peering_connection_accepter" [ label = "aws_vpc_peering_connection_accepter
+(AWS::EC2::VPCPeeringConnectionAccepter)" ];
+  "aws_vpc_peering_connection_options" [ label = "aws_vpc_peering_connection_options
+(AWS::EC2::VPCPeeringConnectionOptions)" ];
+  "aws_vpc_security_group_egress_rule" [ label = "aws_vpc_security_group_egress_rule
+(AWS::EC2::SecurityGroupEgressRule)" ];
+  "aws_vpc_security_group_ingress_rule" [ label = "aws_vpc_security_group_ingress_rule
+(AWS::EC2::SecurityGroupIngressRule)" ];
+  "aws_vpc_security_group_vpc_association" [ label = "aws_vpc_security_group_vpc_association
+(AWS::EC2::SecurityGroupVPCAssociation)" ];
+  "aws_vpc_block_public_access_exclusion" -> "aws_vpc";
+  "aws_vpc_dhcp_options_association" -> "aws_vpc";
+  "aws_vpc_dhcp_options_association" -> "aws_vpc_dhcp_options";
+  "aws_vpc_endpoint" -> "aws_vpc";
+  "aws_vpc_endpoint_connection_accepter" -> "aws_vpc_endpoint";
+  "aws_vpc_endpoint_policy" -> "aws_vpc_endpoint";
+  "aws_vpc_endpoint_private_dns" -> "aws_vpc_endpoint";
+  "aws_vpc_endpoint_route_table_association" -> "aws_vpc_endpoint";
+  "aws_vpc_endpoint_security_group_association" -> "aws_vpc_endpoint";
+  "aws_vpc_endpoint_service_allowed_principal" -> "aws_vpc_endpoint_service";
+  "aws_vpc_endpoint_service_private_dns_verification" -> "aws_vpc_endpoint_service";
+  "aws_vpc_endpoint_subnet_association" -> "aws_vpc_endpoint";
+  "aws_vpc_ipv4_cidr_block_association" -> "aws_vpc";
+  "aws_vpc_ipv6_cidr_block_association" -> "aws_vpc";
+  "aws_vpc_peering_connection" -> "aws_vpc";
+  "aws_vpc_peering_connection_accepter" -> "aws_vpc_peering_connection";
+  "aws_vpc_peering_connection_options" -> "aws_vpc_peering_connection";
+  "aws_vpc_security_group_vpc_association" -> "aws_vpc";
+}

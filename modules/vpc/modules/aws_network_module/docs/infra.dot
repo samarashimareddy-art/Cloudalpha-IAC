@@ -1,0 +1,19 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_network_acl" [ label = "aws_network_acl
+(AWS::EC2::NetworkAcl)", shape =rectangle, fillcolor = "#E78F81" ];
+  "aws_network_acl_association" [ label = "aws_network_acl_association
+(AWS::EC2::SubnetNetworkAclAssociation)", shape =rectangle, fillcolor = "#E78F81" ];
+  "aws_network_acl_rule" [ label = "aws_network_acl_rule
+(AWS::EC2::NetworkAclEntry)", shape =rectangle, fillcolor = "#E78F81" ];
+  "aws_network_interface" [ label = "aws_network_interface
+(AWS::EC2::NetworkInterface)", shape =rectangle, fillcolor = "#B7E0FF" ];
+  "aws_network_interface_permission" [ label = "aws_network_interface_permission
+(AWS::EC2::NetworkInterfacePermission)", shape =rectangle, fillcolor = "#B7E0FF" ];
+  "aws_network_interface_sg_attachment" [ label = "aws_network_interface_sg_attachment
+(AWS::EC2::NetworkInterfaceAttachment)", shape =rectangle, fillcolor = "#B7E0FF" ];
+  "aws_network_acl_association" -> "aws_network_acl";
+  "aws_network_acl_rule" -> "aws_network_acl";
+  "aws_network_interface_permission" -> "aws_network_interface";
+  "aws_network_interface_sg_attachment" -> "aws_network_interface";
+}

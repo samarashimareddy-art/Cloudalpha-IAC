@@ -1,0 +1,8 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_vpc_dhcp_options" [ label = "aws_vpc_dhcp_options
+(aws_vpc_dhcp_options)", shape =rectangle ];
+  "aws_vpc_dhcp_options_association" [ label = "aws_vpc_dhcp_options_association
+(aws_vpc_dhcp_options_association)", shape =rectangle ];
+  "aws_vpc_dhcp_options_association" -> "aws_vpc_dhcp_options";
+}

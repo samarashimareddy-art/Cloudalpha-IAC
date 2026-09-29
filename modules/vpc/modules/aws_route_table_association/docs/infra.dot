@@ -1,0 +1,11 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_route_table_association.public" [ label = "aws_route_table_association.public
+(aws_route_table_association)", shape =rectangle ];
+  "aws_route_table_association.private" [ label = "aws_route_table_association.private
+(aws_route_table_association)", shape =rectangle ];
+  "aws_route_table_association.internet_gw" [ label = "aws_route_table_association.internet_gw
+(aws_route_table_association)", shape =rectangle ];
+  "aws_route_table_association.virtual_private_gw" [ label = "aws_route_table_association.virtual_private_gw
+(aws_route_table_association)", shape =rectangle ];
+}

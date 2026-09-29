@@ -1,0 +1,26 @@
+digraph INFRA {
+  node [ color = "black", fillcolor = "#E6E6E6", height =1, style = "filled,bold,rounded", fontname = "Arial" ];
+  "aws_ec2_managed_prefix_list" [ label = "aws_ec2_managed_prefix_list
+(AWS::EC2::ManagedPrefixList)", shape =rectangle ];
+  "aws_ec2_managed_prefix_list_entry" [ label = "aws_ec2_managed_prefix_list_entry
+(AWS::EC2::ManagedPrefixListEntry)", shape =rectangle ];
+  "aws_ec2_network_insights_path" [ label = "aws_ec2_network_insights_path
+(AWS::EC2::NetworkInsightsPath)", shape =rectangle ];
+  "aws_ec2_network_insights_analysis" [ label = "aws_ec2_network_insights_analysis
+(AWS::EC2::NetworkInsightsAnalysis)", shape =rectangle ];
+  "aws_ec2_subnet_cidr_reservation" [ label = "aws_ec2_subnet_cidr_reservation
+(AWS::EC2::SubnetCidrReservation)", shape =rectangle ];
+  "aws_ec2_traffic_mirror_filter" [ label = "aws_ec2_traffic_mirror_filter
+(AWS::EC2::TrafficMirrorFilter)", shape =rectangle ];
+  "aws_ec2_traffic_mirror_filter_rule" [ label = "aws_ec2_traffic_mirror_filter_rule
+(AWS::EC2::TrafficMirrorFilterRule)", shape =rectangle ];
+  "aws_ec2_traffic_mirror_target" [ label = "aws_ec2_traffic_mirror_target
+(AWS::EC2::TrafficMirrorTarget)", shape =rectangle ];
+  "aws_ec2_traffic_mirror_session" [ label = "aws_ec2_traffic_mirror_session
+(AWS::EC2::TrafficMirrorSession)", shape =rectangle ];
+  "aws_ec2_managed_prefix_list_entry" -> "aws_ec2_managed_prefix_list";
+  "aws_ec2_network_insights_analysis" -> "aws_ec2_network_insights_path";
+  "aws_ec2_traffic_mirror_filter_rule" -> "aws_ec2_traffic_mirror_filter";
+  "aws_ec2_traffic_mirror_session" -> "aws_ec2_traffic_mirror_filter";
+  "aws_ec2_traffic_mirror_session" -> "aws_ec2_traffic_mirror_target";
+}
