@@ -1,0 +1,76 @@
+name: Terraform CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    name: Terraform Validate and Deploy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    environment:
+      name: production
+      url: https://ai-devops.apx-cloudalpha.com
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform init
+        # Add backend config flags here if using remote state
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Upload Terraform Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: tfplan
+
+      - name: Run SonarQube scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=Cloudalpha-IAC
+            -Dsonar.organization=samarashimareddy-art
+            -Dsonar.host.url=https://sonarcloud.io
+
+      - name: Post SonarQube scan results
+        run: |
+          curl -X POST https://ai-devops.apx-cloudalpha.com/api/v1/security/scan-results \
+            -H "X-API-Key: ${{ secrets.PLATFORM_API_KEY }}" \
+            -d @sonar-report.json
+        continue-on-error: true
+
+      - name: Run GitLeaks secret scan
+        run: |
+          curl -sSL -o gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.18.4/gitleaks_8.18.4_linux_x64.tar.gz
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks detect --redact --exit-code 0 --report-path gitleaks-report.json
+
+      - name: Post GitLeaks scan results
+        run: |
+          curl -X POST https://ai-devops.apx-cloudalpha.com/api/v1/security/scan-results \
+            -H "X-API-Key: ${{ secrets.PLATFORM_API_KEY }}" \
+            -d @gitleaks-report.json
+        continue-on-error: true
+
+      - name: Terraform Apply (Manual Approval)
+        if: github.ref == 'refs/heads/main'
+        environment:
+          name: production
+          # Requires reviewers for manual approval
+        run: terraform apply tfplan
