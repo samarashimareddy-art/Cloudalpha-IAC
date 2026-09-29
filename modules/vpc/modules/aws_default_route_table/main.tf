@@ -18,9 +18,13 @@ resource "aws_default_route_table" "default" {
 
       # One of the following targets must be provided
       core_network_arn          = try(route.value.core_network_arn, null)
-      egress_only_gateway_id    = try(route.value.internal_egress_only_igw, false) && var.create_egress_only_igw && var.enable_ipv6 ? aws_egress_only_internet_gateway.this[0].id : try(route.value.egress_only_gateway_id, null)
-      gateway_id                = try(route.value.internal_igw, false) && var.create_igw && var.public_subnets_length > 0 ? aws_internet_gateway.this[0].id : try(route.value.gateway_id, null)
-      nat_gateway_id            = try(route.value.internal_public_nat_gateway, false) && var.create_vpc && var.enable_public_nat_gateway ? aws_nat_gateway.public_nat_gateway[0].id : try(route.value.internal_private_nat_gateway, false) && var.create_vpc && var.enable_private_nat_gateway ? aws_nat_gateway.private_nat_gateway[0].id : try(route.value.nat_gateway_id, null)
+      # The gateways are created by sibling modules, so their IDs are passed in
+      # (this module previously referenced aws_internet_gateway.this,
+      # aws_egress_only_internet_gateway.this and aws_nat_gateway.*, none of
+      # which exist in it).
+      egress_only_gateway_id    = try(route.value.internal_egress_only_igw, false) && var.create_egress_only_igw && var.enable_ipv6 ? var.egress_only_gateway_id : try(route.value.egress_only_gateway_id, null)
+      gateway_id                = try(route.value.internal_igw, false) && var.create_igw && var.public_subnets_length > 0 ? var.internet_gateway_id : try(route.value.gateway_id, null)
+      nat_gateway_id            = try(route.value.internal_public_nat_gateway, false) && var.create_vpc && var.enable_public_nat_gateway ? var.public_nat_gateway_id : try(route.value.internal_private_nat_gateway, false) && var.create_vpc && var.enable_private_nat_gateway ? var.private_nat_gateway_id : try(route.value.nat_gateway_id, null)
       network_interface_id      = try(route.value.network_interface_id, null)
       transit_gateway_id        = try(route.value.transit_gateway_id, null)
       vpc_endpoint_id           = try(route.value.vpc_endpoint_id, null)

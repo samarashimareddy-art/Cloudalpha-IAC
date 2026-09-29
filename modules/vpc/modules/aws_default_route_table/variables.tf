@@ -79,3 +79,27 @@ variable "default_route_table_id" {
   description = "The ID of the default route table for the VPC"
   type        = string
 }
+
+variable "internet_gateway_id" {
+  description = "ID of the Internet Gateway (from the internet_gateway module), used for routes with internal_igw = true"
+  type        = string
+  default     = null
+}
+
+variable "egress_only_gateway_id" {
+  description = "ID of the egress-only Internet Gateway, used for routes with internal_egress_only_igw = true"
+  type        = string
+  default     = null
+}
+
+variable "public_nat_gateway_id" {
+  description = "ID of the public NAT Gateway (from the nat_gateway module), used for routes with internal_public_nat_gateway = true"
+  type        = string
+  default     = null
+}
+
+variable "private_nat_gateway_id" {
+  description = "ID of the private NAT Gateway (from the nat_gateway module), used for routes with internal_private_nat_gateway = true"
+  type        = string
+  default     = null
+}
