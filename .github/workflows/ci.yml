@@ -1,0 +1,108 @@
+name: Cloudalpha-IAC CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Run SonarQube scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=Cloudalpha-IAC
+            -Dsonar.organization=samarashimareddy-art
+            -Dsonar.host.url=https://sonarcloud.io
+      - name: Post SonarQube results to platform
+        run: |
+          curl -X POST https://ai-devops.apx-cloudalpha.com/api/v1/security/scan-results \
+            -H "X-API-Key: ${{ secrets.PLATFORM_API_KEY }}" \
+            -d @sonar-report.json
+        continue-on-error: true
+
+  docker-build-scan:
+    name: Docker Build & Scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          tags: samarashimareddy-art-cloudalpha-iac:ci
+          push: false
+      - name: Run Trivy security scanner on Docker image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: samarashimareddy-art-cloudalpha-iac:ci
+          format: 'json'
+        continue-on-error: true
+      - name: Post Trivy scan results to platform
+        run: |
+          curl -X POST https://ai-devops.apx-cloudalpha.com/api/v1/security/scan-results \
+            -H "X-API-Key: ${{ secrets.PLATFORM_API_KEY }}" \
+            -d @trivy-report.json
+        continue-on-error: true
+      - name: Run GitLeaks secret scan
+        run: |
+          curl -sSL -o gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.18.4/gitleaks_8.18.4_linux_x64.tar.gz
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks detect --redact --exit-code 0 --report-path gitleaks-report.json
+      - name: Post GitLeaks results to platform
+        run: |
+          curl -X POST https://ai-devops.apx-cloudalpha.com/api/v1/security/scan-results \
+            -H "X-API-Key: ${{ secrets.PLATFORM_API_KEY }}" \
+            -d @gitleaks-report.json
+        continue-on-error: true
+
+  terraform-deploy:
+    name: Terraform Deploy (AWS us-east-1)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    environment:
+      name: production
+      url: https://aws.amazon.com
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::739572512568:role/github-actions-cloudalpha-iac
+          aws-region: us-east-1
+          role-session-name: github-actions-cloudalpha-iac-session
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+      - name: Terraform Init
+        run: terraform init
+        # Add backend config flags here if using remote state
+      - name: Terraform Validate
+        run: terraform validate
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+      - name: Upload Terraform plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: infra/tfplan
+      - name: Terraform Apply (requires approval)
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply tfplan
+        env:
+          # Only runs after manual approval via GitHub Environment
+        # This step is gated by the 'production' environment with required reviewers
