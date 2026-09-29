@@ -95,6 +95,7 @@ module "public_route_table" {
   enable_ipv6               = false
   vpc_id                    = local.vpc_id
   public_subnets            = local.public_subnet_ids
+  internet_gateway_id       = var.create_internet_gateway ? module.internet_gateway[0].internet_gateway_id : null
   public_route_table_routes = var.public_route_table_routes
   public_route_table_tags   = var.public_route_table_tags
   general_tags              = var.general_tags

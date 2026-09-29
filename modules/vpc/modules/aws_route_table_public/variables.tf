@@ -76,3 +76,15 @@ variable "public_subnets" {
   description = "List of public subnet IDs"
   type        = list(string)
 }
+
+variable "internet_gateway_id" {
+  description = "ID of the Internet Gateway created by the internet_gateway module, used for routes with internal_igw = true"
+  type        = string
+  default     = null
+}
+
+variable "egress_only_gateway_id" {
+  description = "ID of the egress-only Internet Gateway, used for routes with internal_egress_only_igw = true"
+  type        = string
+  default     = null
+}
