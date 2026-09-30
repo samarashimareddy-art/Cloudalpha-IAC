@@ -23,6 +23,21 @@ output "ec2_instance_id" {
   value       = module.ec2.id
 }
 
+output "ecr_repository_url" {
+  description = "Where the Cloudalpha-App pipeline pushes its image"
+  value       = aws_ecr_repository.app.repository_url
+}
+
+output "ecs_cluster_name" {
+  description = "ECS cluster running the app"
+  value       = aws_ecs_cluster.app.name
+}
+
+output "ecs_service_name" {
+  description = "ECS service the app pipeline redeploys"
+  value       = aws_ecs_service.app.name
+}
+
 output "ec2_private_ip" {
   description = "Private IP of the demo EC2 instance"
   value       = module.ec2.private_ip
