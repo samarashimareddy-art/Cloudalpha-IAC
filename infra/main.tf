@@ -81,14 +81,7 @@ resource "aws_security_group" "ec2" {
 
 ################################################################################
 # S3 - cloudalpha-aws-s3 module
-# Same bucket the first pipeline run created with plain resources; the import
-# block below adopts it into this module instead of trying to create it again.
 ################################################################################
-import {
-  to = module.s3.aws_s3_bucket.this[0]
-  id = "cloudalpha-demo-${var.environment}-${var.suffix}"
-}
-
 module "s3" {
   source = "../modules/s3"
 
