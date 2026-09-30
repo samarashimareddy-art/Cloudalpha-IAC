@@ -12,7 +12,9 @@ deployed with **plain Terraform** (no Terragrunt) through a GitHub Actions pipel
 | `modules/s3` | CloudAlpha S3 module (bucket, policies, encryption, ...) |
 | `modules/ec2` | CloudAlpha EC2 module (instance, EBS, ...) |
 | `infra/` | Root configuration for the `dev` demo environment - calls the three modules |
-| `app/` | Sample Node.js API (built, tested and scanned by the pipeline) |
+
+The sample application lives in its own repository,
+[Cloudalpha-App](https://github.com/samarashimareddy-art/Cloudalpha-App).
 
 ## What `infra/` creates (us-east-1)
 
