@@ -1,46 +1,28 @@
-name: Terraform CI/CD Pipeline
+# .github/workflows/terraform-destroy.yml
+name: Terraform Destroy Pipeline
 on:
-  push:
-    branches: [main]
-permissions:
-  id-token: write
-  contents: read
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type DESTROY to confirm destruction of infrastructure.'
+        required: true
+        default: ''
 jobs:
-  security-scan:
-    name: Security Scans
-    runs-on: ubuntu-latest
-    env:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-      - name: Run GitLeaks secret scan
-        run: |
-          curl -sSL -o gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.18.4/gitleaks_8.18.4_linux_x64.tar.gz
-          tar -xzf gitleaks.tar.gz gitleaks
-          ./gitleaks detect --redact --exit-code 0 --report-path gitleaks-report.json
-      - name: Run Trivy misconfiguration scan
-        run: |
-          docker run --rm -v "$PWD:/src" -w /src \
-            aquasec/trivy:latest fs --scanners vuln,misconfig,secret --severity CRITICAL,HIGH --exit-code 0 --no-progress \
-            .
-      - name: Run SonarQube scan
-        if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarqube-scan-action@v6
-        with:
-          args: >
-            -Dsonar.projectKey=samarashimareddy-art_Cloudalpha-IAC -Dsonar.organization=samarashimareddy-art -Dsonar.host.url=https://sonarcloud.io
-
-  terraform:
-    name: Terraform Plan & Apply
-    needs: security-scan
-    runs-on: ubuntu-latest
+  terraform-destroy:
+    if: ${{ github.event.inputs.confirm == 'DESTROY' }}
+    name: Terraform Destroy (Production)
     environment:
       name: production
-      url: https://console.aws.amazon.com/
+      # Ensure required reviewers are set in the GitHub Environment settings
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: infra
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -51,19 +33,31 @@ jobs:
           aws-region: us-east-1
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
-      - name: Terraform format check
+      - name: Run SonarQube scan
+        if: env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          args: >
+            -Dsonar.projectKey=samarashimareddy-art_Cloudalpha-IAC -Dsonar.organization=samarashimareddy-art -Dsonar.host.url=https://sonarcloud.io
+
+      - name: Run secret scan with Gitleaks
+        run: |
+          curl -sSL -o gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.18.4/gitleaks_8.18.4_linux_x64.tar.gz
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks detect --redact --exit-code 0 --report-path gitleaks-report.json
+      - name: Check Terraform formatting
         run: terraform fmt -check -recursive
-      - name: Terraform init (uses S3 backend)
+      - name: Terraform Init (with S3 backend)
         run: terraform init
-        # If backend config flags are needed, add them here (e.g. -backend-config)
-      - name: Terraform validate
+        # S3 backend configuration is read from infra/terraform files
+      - name: Terraform Validate
         run: terraform validate
-      - name: Terraform plan
-        run: terraform plan -out=tfplan
-      - name: Upload Terraform plan artifact
+      - name: Terraform Plan Destroy
+        run: terraform plan -destroy -out=destroy.tfplan
+      - name: Upload Destroy Plan
         uses: actions/upload-artifact@v4
         with:
-          name: tfplan
-          path: infra/tfplan
-      - name: Terraform apply (manual approval via GitHub Environment)
-        run: terraform apply -auto-approve tfplan
+          name: destroy-tfplan
+          path: infra/destroy.tfplan
+      - name: Terraform Apply Destroy Plan (Manual Approval via Environment)
+        run: terraform apply destroy.tfplan
